@@ -12,6 +12,10 @@ public class SistemaExames {
         requisicoes = new ArrayList<>();
     }
 
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
     public void adicionarUsuario(Usuario usuario) {
         usuarios.add(usuario);
     }

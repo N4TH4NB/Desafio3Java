@@ -1,5 +1,7 @@
 package org.example;
 
+import java.io.Serializable;
+
 abstract class Usuario {
     private String nome;
     private String senha;
@@ -34,12 +36,16 @@ abstract class Usuario {
     public boolean autenticar(String senha) {
         return this.senha.equals(senha);
     }
+
+    public String toString(){
+        return nome + " " + senha + " " + papel;
+    }
 }
 
 class Paciente extends Usuario {
     private String cpf;
 
-    public Paciente(String nome, String senha, String cpf) {
+    Paciente(String nome, String senha, String cpf) {
         super(nome, senha, "paciente");
         this.setCpf(cpf);
     }
@@ -69,14 +75,14 @@ class Funcionario extends Usuario {
     }
 }
 
-class Administrador extends Funcionario {
+class Administrador extends Funcionario{
 
     public Administrador(String nome, String senha) {
         super(nome, senha);
         this.setPapel("administrador");
     }
 
-    public Usuario criarUsuario(String nome, String senha, String papel, String cpf) {
+    public static Usuario criarUsuario(String nome, String senha, String papel, String cpf) {
         return switch (papel) {
             case "paciente" -> new Paciente(nome, senha, cpf);
             case "funcionario" -> new Funcionario(nome, senha);
@@ -85,6 +91,3 @@ class Administrador extends Funcionario {
         };
     }
 }
-
-
-
