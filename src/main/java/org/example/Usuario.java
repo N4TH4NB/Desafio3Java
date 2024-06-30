@@ -59,12 +59,12 @@ class Paciente extends Usuario {
     }
 }
 
-class Funcionario extends Usuario {
+class Funcionario extends Usuario implements Registros {
     public Funcionario(String nome, String senha) {
         super(nome, senha, "funcionario");
     }
 
-    public void registrarColeta(Exame exame, String material, double quantidade, String hora) {
+    /*public void registrarColeta(Exame exame, String material, double quantidade, String hora) {
         exame.setMaterial(material);
         exame.setQuantidade(quantidade);
         exame.setHoraColeta(hora);
@@ -72,7 +72,7 @@ class Funcionario extends Usuario {
 
     public void registrarDiagnostico(Exame exame, String diagnostico) {
         exame.setDiagnostico(diagnostico);
-    }
+    }*/
 }
 
 class Administrador extends Funcionario{

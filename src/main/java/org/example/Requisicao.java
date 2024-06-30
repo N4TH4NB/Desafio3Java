@@ -47,4 +47,8 @@ class Requisicao {
     public List<Exame> getExames() {
         return exames;
     }
+
+    public String toString(){
+        return "Id: " + id + " | Paciente: " + paciente.getNome() + " | Medico Solicitante: " + medicoSolicitante;
+    }
 }
