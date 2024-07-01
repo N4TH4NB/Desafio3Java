@@ -44,4 +44,17 @@ public class SistemaExames {
         }
         return exames;
     }
+
+    public List<Exame> gerarRelatorioPorPeriodo(String inicio, String fim) {
+        List<Exame> examesPeriodo = new ArrayList<>();
+        for (Requisicao requisicao : requisicoes) {
+            for (Exame exame : requisicao.getExames()) {
+                String horaColeta = exame.getHoraColeta();
+                if (horaColeta.compareTo(inicio) >= 0 && horaColeta.compareTo(fim) <= 0) {
+                    examesPeriodo.add(exame);
+                }
+            }
+        }
+        return examesPeriodo;
+    }
 }

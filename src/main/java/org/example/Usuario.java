@@ -1,7 +1,5 @@
 package org.example;
 
-import java.io.Serializable;
-
 abstract class Usuario {
     private String nome;
     private String senha;
@@ -63,16 +61,6 @@ class Funcionario extends Usuario implements Registros {
     public Funcionario(String nome, String senha) {
         super(nome, senha, "funcionario");
     }
-
-    /*public void registrarColeta(Exame exame, String material, double quantidade, String hora) {
-        exame.setMaterial(material);
-        exame.setQuantidade(quantidade);
-        exame.setHoraColeta(hora);
-    }
-
-    public void registrarDiagnostico(Exame exame, String diagnostico) {
-        exame.setDiagnostico(diagnostico);
-    }*/
 }
 
 class Administrador extends Funcionario{
