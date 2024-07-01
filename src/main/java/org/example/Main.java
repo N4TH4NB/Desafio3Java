@@ -10,12 +10,33 @@ public class Main {
         SistemaExames sistema = new SistemaExames();
         Scanner scanner = new Scanner(System.in);
 
-        // Adicionando alguns usuários para teste
         Usuario admin = Administrador.criarUsuario("admin", "123", "administrador", "");
-        Usuario funcionario = Administrador.criarUsuario("Maria", "xyz", "funcionario", "");
+        Usuario paciente1 = Administrador.criarUsuario("Joao", "abc", "paciente", "12345678900");
+        Usuario paciente2 = Administrador.criarUsuario("Maria", "def", "paciente", "23456789011");
+        Usuario funcionario1 = Administrador.criarUsuario("Carlos", "ghi", "funcionario", "");
+        Usuario funcionario2 = Administrador.criarUsuario("Ana", "jkl", "funcionario", "");
 
         sistema.adicionarUsuario(admin);
-        sistema.adicionarUsuario(funcionario);
+        sistema.adicionarUsuario(paciente1);
+        sistema.adicionarUsuario(paciente2);
+        sistema.adicionarUsuario(funcionario1);
+        sistema.adicionarUsuario(funcionario2);
+
+        // Adicionando algumas requisições de exames para teste
+        Requisicao requisicao1 = new Requisicao("REQ001", (Paciente) paciente1, "Dr. Silva");
+        Exame exame1 = new Exame("Colesterol", "Sangue", 5.0, "", "");
+        requisicao1.adicionarExame(exame1);
+        sistema.adicionarRequisicao(requisicao1);
+
+        Requisicao requisicao2 = new Requisicao("REQ002", (Paciente) paciente2, "Dr. Souza");
+        Exame exame2 = new Exame("Diabetes", "Urina", 3.0, "", "");
+        requisicao2.adicionarExame(exame2);
+        sistema.adicionarRequisicao(requisicao2);
+
+        Requisicao requisicao3 = new Requisicao("REQ003", (Paciente) paciente1, "Dr. Lima");
+        Exame exame3 = new Exame("Raio-X", "Raio-X", 0, "", "");
+        requisicao3.adicionarExame(exame3);
+        sistema.adicionarRequisicao(requisicao3);
 
         while (true) {
             Usuario usuarioAutenticado = null;
@@ -83,10 +104,15 @@ public class Main {
                     Usuario paciente = sistema.getUsuarios().stream().filter(u -> u.getNome().equals(nomePaciente) && u instanceof Paciente).findFirst().orElse(null);
                     if (paciente != null) {
                         Requisicao requisicao = new Requisicao(id, (Paciente) paciente, medicoSolicitante);
-                        System.out.println("Tipo de Exame:");
-                        String tipo = scanner.nextLine();
-                        Exame exame = new Exame(tipo, "", 0, "", "");
-                        requisicao.adicionarExame(exame);
+                        System.out.println("Quantidade de Exames:");
+                        int qnt = scanner.nextInt();
+                        scanner.nextLine();
+                        for (int i = 0; i < qnt; i++) {
+                            System.out.println("Tipo de Exame:");
+                            String tipo = scanner.nextLine();
+                            Exame exame = new Exame(tipo, "", 0, "", "");
+                            requisicao.adicionarExame(exame);
+                        }
                         sistema.adicionarRequisicao(requisicao);
                         System.out.println("Requisicao criada e exame adicionado.");
                     } else {
