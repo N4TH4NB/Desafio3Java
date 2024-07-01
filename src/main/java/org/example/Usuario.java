@@ -34,10 +34,6 @@ abstract class Usuario {
     public boolean autenticar(String senha) {
         return this.senha.equals(senha);
     }
-
-    public String toString(){
-        return nome + " " + senha + " " + papel;
-    }
 }
 
 class Paciente extends Usuario {

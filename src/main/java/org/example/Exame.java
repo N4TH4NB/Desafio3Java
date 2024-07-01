@@ -54,8 +54,4 @@ public class Exame {
     public String getDiagnostico() {
         return diagnostico;
     }
-
-    public String toString() {
-        return tipo + " | " + material + " | " + quantidade + " | " + horaColeta + " | " + diagnostico;
-    }
 }
