@@ -107,10 +107,10 @@ public class Main {
                         for (Exame exame : relatorioEstatistico) {
                             contagemExames.put(exame.getTipo(), contagemExames.getOrDefault(exame.getTipo(), 0) + 1);
                         }
-                    }else {
+                    } else {
                         relatorioEstatistico = sistema.gerarRelatorioEstatistico(null);
                         for (Exame exame : relatorioEstatistico) {
-                        contagemExames.put(exame.getTipo(), contagemExames.getOrDefault(exame.getTipo(), 0) + 1);
+                            contagemExames.put(exame.getTipo(), contagemExames.getOrDefault(exame.getTipo(), 0) + 1);
                         }
                     }
                     for (Map.Entry<String, Integer> entry : contagemExames.entrySet()) {
