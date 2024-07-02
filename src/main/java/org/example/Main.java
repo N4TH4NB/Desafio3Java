@@ -5,6 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+/*
+/
+/Desafio 3 de Java
+/Grupo: Maria Eduarda Mueller, Nathan Bellini Carpes, Willian Felipe Schwantz.
+/
+*/
+
 public class Main {
     public static void main(String[] args) {
         SistemaExames sistema = new SistemaExames();
