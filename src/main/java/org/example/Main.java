@@ -1,9 +1,9 @@
 package org.example;
 
-import java.util.List;
-import java.util.Scanner;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -33,7 +33,7 @@ public class Main {
         requisicao2.adicionarExame(exame2);
         sistema.adicionarRequisicao(requisicao2);
 
-        Requisicao requisicao3 = new Requisicao("003", (Paciente) paciente1, "Dr. Lima");
+        Requisicao requisicao3 = new Requisicao("003", (Paciente) paciente2, "Dr. Lima");
         Exame exame3 = new Exame("Raio-X", "Raio-X", 0, "10:55", "Perna Quebrada");
         requisicao3.adicionarExame(exame3);
         sistema.adicionarRequisicao(requisicao3);
@@ -75,46 +75,62 @@ public class Main {
                 System.out.println("9. Sair");
 
                 int opcao = scanner.nextInt();
-                scanner.nextLine();  // Consumir a nova linha
+                scanner.nextLine();
 
                 if (opcao == 1) {
                     System.out.println("Logout realizado.");
-                    break; // Sair do loop interno para voltar ao login
-                }
-
-                else if (opcao == 2) {
+                    break;
+                } else if (opcao == 2) {
                     List<Requisicao> relatorio = sistema.gerarRelatorioExames();
-                    for (Requisicao requisicao : relatorio) {
-                        System.out.println(requisicao);
-                        for (Exame exame : requisicao.getExames()) {
-                            System.out.println("  Exame: " + exame.getTipo() + ", Material: " + exame.getMaterial() + ", Quantidade: " + exame.getQuantidade() + ", Hora Coleta: " + exame.getHoraColeta() + ", Diagnostico: " + exame.getDiagnostico());
+                    if (usuarioAutenticado instanceof Paciente) {
+                        for (Requisicao requisicao : relatorio) {
+                            if (requisicao.getPaciente().getNome().equals(usuarioAutenticado.getNome())) {
+                                System.out.println(requisicao);
+                                for (Exame exame : requisicao.getExames()) {
+                                    System.out.println("  Exame: " + exame.getTipo() + ", Material: " + exame.getMaterial() + ", Quantidade: " + exame.getQuantidade() + ", Hora Coleta: " + exame.getHoraColeta() + ", Diagnostico: " + exame.getDiagnostico());
+                                }
+                            }
+                        }
+                    } else {
+                        for (Requisicao requisicao : relatorio) {
+                            System.out.println(requisicao);
+                            for (Exame exame : requisicao.getExames()) {
+                                System.out.println("  Exame: " + exame.getTipo() + ", Material: " + exame.getMaterial() + ", Quantidade: " + exame.getQuantidade() + ", Hora Coleta: " + exame.getHoraColeta() + ", Diagnostico: " + exame.getDiagnostico());
+                            }
                         }
                     }
-                }
-
-                else if (opcao == 3) {
-                    List<Exame> relatorioEstatistico = sistema.gerarRelatorioEstatistico();
+                } else if (opcao == 3) {
+                    List<Exame> relatorioEstatistico;
                     Map<String, Integer> contagemExames = new HashMap<>();
-                    for (Exame exame : relatorioEstatistico) {
+                    if (usuarioAutenticado instanceof Paciente) {
+                        relatorioEstatistico = sistema.gerarRelatorioEstatistico(usuarioAutenticado.getNome());
+                        for (Exame exame : relatorioEstatistico) {
+                            contagemExames.put(exame.getTipo(), contagemExames.getOrDefault(exame.getTipo(), 0) + 1);
+                        }
+                    }else {
+                        relatorioEstatistico = sistema.gerarRelatorioEstatistico(null);
+                        for (Exame exame : relatorioEstatistico) {
                         contagemExames.put(exame.getTipo(), contagemExames.getOrDefault(exame.getTipo(), 0) + 1);
+                        }
                     }
                     for (Map.Entry<String, Integer> entry : contagemExames.entrySet()) {
                         System.out.println("Tipo: " + entry.getKey() + ", Quantidade: " + entry.getValue());
                     }
-                }
-
-                else if (opcao == 4) {
+                } else if (opcao == 4) {
                     System.out.println("Hora de Inicio:");
                     String inicio = scanner.nextLine();
                     System.out.println("Hora de Fim:");
                     String fim = scanner.nextLine();
-                    List<Exame> relatorioPorPeriodo = sistema.gerarRelatorioPorPeriodo(inicio, fim);
+                    List<Exame> relatorioPorPeriodo;
+                    if (usuarioAutenticado instanceof Paciente) {
+                        relatorioPorPeriodo = sistema.gerarRelatorioPorPeriodo(inicio, fim, usuarioAutenticado.getNome());
+                    } else {
+                        relatorioPorPeriodo = sistema.gerarRelatorioPorPeriodo(inicio, fim, null);
+                    }
                     for (Exame exame : relatorioPorPeriodo) {
                         System.out.println("  Hora Coleta: " + exame.getHoraColeta() + ", Exame: " + exame.getTipo() + ", Material: " + exame.getMaterial() + ", Quantidade: " + exame.getQuantidade() + ", Diagnostico: " + exame.getDiagnostico());
                     }
-                }
-
-                else if (opcao == 5 && (usuarioAutenticado instanceof Funcionario || usuarioAutenticado instanceof Administrador)) {
+                } else if (opcao == 5 && (usuarioAutenticado instanceof Funcionario || usuarioAutenticado instanceof Administrador)) {
                     System.out.println("ID da Requisicao:");
                     String id = scanner.nextLine();
                     System.out.println("Nome do Paciente:");
@@ -139,17 +155,14 @@ public class Main {
                         if (usuarioAutenticado.autenticar(senha)) {
                             sistema.adicionarRequisicao(requisicao);
                             System.out.println("Requisicao criada e exame adicionado.");
-                        }
-                        else{
+                        } else {
                             System.out.println("Senha invalida, realize o processo novamente!");
                             opcao = 5;
                         }
                     } else {
                         System.out.println("Paciente não encontrado.");
                     }
-                }
-
-                else if (opcao == 6 && (usuarioAutenticado instanceof Funcionario || usuarioAutenticado instanceof Administrador)) {
+                } else if (opcao == 6 && (usuarioAutenticado instanceof Funcionario || usuarioAutenticado instanceof Administrador)) {
                     System.out.println("ID da Requisicao:");
                     String id = scanner.nextLine();
                     Requisicao requisicao = sistema.gerarRelatorioExames().stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);
@@ -170,8 +183,7 @@ public class Main {
                             if (usuarioAutenticado.autenticar(senha)) {
                                 ((Funcionario) usuarioAutenticado).registrarColeta(exame, material, quantidade, hora);
                                 System.out.println("Coleta registrada.");
-                            }
-                            else{
+                            } else {
                                 System.out.println("Senha invalida, realize o processo novamente!");
                                 opcao = 6;
                             }
@@ -181,9 +193,7 @@ public class Main {
                     } else {
                         System.out.println("Requisição não encontrada.");
                     }
-                }
-
-                else if (opcao == 7 && (usuarioAutenticado instanceof Funcionario || usuarioAutenticado instanceof Administrador)) {
+                } else if (opcao == 7 && (usuarioAutenticado instanceof Funcionario || usuarioAutenticado instanceof Administrador)) {
                     System.out.println("ID da Requisicao:");
                     String id = scanner.nextLine();
                     Requisicao requisicao = sistema.gerarRelatorioExames().stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);
@@ -209,31 +219,29 @@ public class Main {
                     } else {
                         System.out.println("Requisição não encontrada.");
                     }
-                }
-
-                else if (opcao == 8 && usuarioAutenticado instanceof Administrador) {
-                        System.out.println("Nome:");
-                        String nome = scanner.nextLine();
-                        System.out.println("Senha:");
-                        String senha = scanner.nextLine();
-                        System.out.println("Papel (paciente/funcionario/administrador):");
-                        String papel = scanner.nextLine();
-                        String cpf = "";
-                        if (papel.equals("paciente")) {
-                            System.out.println("Cpf:");
-                            cpf = scanner.nextLine();
-                        }
-                        Usuario novoUsuario = Administrador.criarUsuario(nome, senha, papel, cpf);
-                        if (novoUsuario != null) {
-                            sistema.adicionarUsuario(novoUsuario);
-                            System.out.println("Usuário adicionado.");
-                        } else {
-                            System.out.println("Papel inválido.");
-                        }
+                } else if (opcao == 8 && usuarioAutenticado instanceof Administrador) {
+                    System.out.println("Nome:");
+                    String nome = scanner.nextLine();
+                    System.out.println("Senha:");
+                    String senha = scanner.nextLine();
+                    System.out.println("Papel (paciente/funcionario/administrador):");
+                    String papel = scanner.nextLine();
+                    String cpf = "";
+                    if (papel.equals("paciente")) {
+                        System.out.println("Cpf:");
+                        cpf = scanner.nextLine();
+                    }
+                    Usuario novoUsuario = Administrador.criarUsuario(nome, senha, papel, cpf);
+                    if (novoUsuario != null) {
+                        sistema.adicionarUsuario(novoUsuario);
+                        System.out.println("Usuário adicionado.");
+                    } else {
+                        System.out.println("Papel inválido.");
+                    }
 
                 } else if (opcao == 9) {
                     System.out.println("Saindo do sistema.");
-                    System.exit(0); // Encerrar a aplicação
+                    System.exit(0);
                 } else {
                     System.out.println("Opção inválida.");
                 }

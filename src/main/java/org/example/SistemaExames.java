@@ -37,24 +37,29 @@ public class SistemaExames {
         return requisicoes;
     }
 
-    public List<Exame> gerarRelatorioEstatistico() {
+    public List<Exame> gerarRelatorioEstatistico(String nomeUsuario) {
         List<Exame> exames = new ArrayList<>();
         for (Requisicao requisicao : requisicoes) {
-            exames.addAll(requisicao.getExames());
+            if (nomeUsuario == null || requisicao.getPaciente().getNome().equals(nomeUsuario)) {
+                exames.addAll(requisicao.getExames());
+            }
         }
         return exames;
     }
 
-    public List<Exame> gerarRelatorioPorPeriodo(String inicio, String fim) {
+    public List<Exame> gerarRelatorioPorPeriodo(String inicio, String fim, String nomeUsuario) {
         List<Exame> examesPeriodo = new ArrayList<>();
         for (Requisicao requisicao : requisicoes) {
-            for (Exame exame : requisicao.getExames()) {
-                String horaColeta = exame.getHoraColeta();
-                if (horaColeta.compareTo(inicio) >= 0 && horaColeta.compareTo(fim) <= 0) {
-                    examesPeriodo.add(exame);
+            if (nomeUsuario == null || requisicao.getPaciente().getNome().equals(nomeUsuario)) {
+                for (Exame exame : requisicao.getExames()) {
+                    String horaColeta = exame.getHoraColeta();
+                    if (horaColeta.compareTo(inicio) >= 0 && horaColeta.compareTo(fim) <= 0) {
+                        examesPeriodo.add(exame);
+                    }
                 }
             }
         }
         return examesPeriodo;
     }
+
 }

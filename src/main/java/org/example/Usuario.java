@@ -11,31 +11,31 @@ abstract class Usuario {
         this.setPapel(papel);
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public void setPapel(String papel) {
-        this.papel = papel;
     }
 
     public String getNome() {
         return nome;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public String getPapel() {
         return papel;
+    }
+
+    public void setPapel(String papel) {
+        this.papel = papel;
     }
 
     public boolean autenticar(String senha) {
         return this.senha.equals(senha);
     }
 
-    public String toString(){
+    public String toString() {
         return nome + papel;
     }
 }
@@ -48,12 +48,12 @@ class Paciente extends Usuario {
         this.setCpf(cpf);
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     public String getCpf() {
         return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 }
 
@@ -63,7 +63,7 @@ class Funcionario extends Usuario implements Registros {
     }
 }
 
-class Administrador extends Funcionario{
+class Administrador extends Funcionario {
 
     public Administrador(String nome, String senha) {
         super(nome, senha);
